@@ -1,0 +1,16 @@
+local Tunnel = module("vrp", "lib/Tunnel")
+local Proxy = module("vrp", "lib/Proxy")
+vRP = Proxy.getInterface("vRP")
+vRPclient = Tunnel.getInterface("vRP","vRP_shop")
+
+RegisterNetEvent("vrpshop:buy")
+AddEventHandler("vrpshop:buy", function(item, price)
+    local source = source
+    local user_id = vRP.getUserId({source})
+
+    if vRP.tryFullPayment({user_id, price}) then
+        vRP.giveInventoryItem({user_id, item, 1, true})
+    else
+        vRPclient.notify(source,{"~r~You do not have enough money to buy this!"})
+    end
+end)
