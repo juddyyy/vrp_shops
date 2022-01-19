@@ -23,28 +23,29 @@ Citizen.CreateThread(function()
 
     for k,v in pairs(cfg.shops) do
         local x,y,z = table.unpack(v)
-        local blip = AddBlipForCoord(x,y,z)
-        SetBlipSprite(blip, 52)
-        SetBlipDisplay(blip, 4)
-        SetBlipScale(blip, 1.0)
-        SetBlipColour(blip, 2)
-        SetBlipAsShortRange(blip, true)
+        local shopblip = AddBlipForCoord(x,y,z)
+        SetBlipSprite(shopblip, 52)
+        SetBlipDisplay(shopblip, 4)
+        SetBlipScale(shopblip, 1.0)
+        SetBlipColour(shopblip, 2)
+        SetBlipAsShortRange(shopblip, true)
 	    BeginTextCommandSetBlipName("STRING")
         AddTextComponentString("Shop")
-        EndTextCommandSetBlipName(blip)
+        EndTextCommandSetBlipName(shopblip)
     end
 
     while true do
+        Citizen.Wait(0)
+
         for k, v in pairs(cfg.shops) do 
             local x,y,z = table.unpack(v)
-            local v1 = vector3(x,y,z)
+            local location = vector3(x,y,z)
 
-            if isInArea(v1, 100.0) then 
-                DrawMarker(20, v1+1 - 0.98, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 0, 255, 60, true, false, 2, true)
+            if isInArea(location, 50.0) then 
+                DrawMarker(20, location+1 - 0.98, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 0, 255, 60, true, false, 2, true)
             end
  
-            if isInMenu == false then
-            if isInArea(v1, 1.4) then 
+            if isInArea(location, 1.4) and isInMenu == false then 
                 alert('Press ~INPUT_VEH_HORN~ to Open the Store!')
                 if IsControlJustPressed(0, 51) then 
                     currentShop = k
@@ -52,18 +53,16 @@ Citizen.CreateThread(function()
                     isInMenu = true
                 end
             end
-            end
-            if isInArea(v1, 1.4) == false and isInMenu and k == currentShop then
+
+            if isInArea(location, 1.4) == false and isInMenu and currentShop == k then
                 RageUI.Visible(RMenu:Get("vRP_Shops", "main"), false)
                 isInMenu = false
             end
         end
-        Citizen.Wait(0)
     end
 end)
 
 function isInArea(v, dis) 
-    
     if #(GetEntityCoords(PlayerPedId(-1)) - v) <= dis then  
         return true
     else 
@@ -75,10 +74,4 @@ function alert(msg)
     SetTextComponentFormat("STRING")
     AddTextComponentString(msg)
     DisplayHelpTextFromStringLabel(0,0,1,-1)
-end
-
-function notify(string)
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(string)
-    DrawNotification(true, false)
 end
