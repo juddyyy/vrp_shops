@@ -19,8 +19,7 @@ local currentShop = nil
 Citizen.CreateThread(function() 
 
     for k,v in pairs(cfg.shops) do
-        local x,y,z = table.unpack(v)
-        local shopblip = AddBlipForCoord(x,y,z)
+        local shopblip = AddBlipForCoord(table.unpack(v))
         SetBlipSprite(shopblip, 52)
         SetBlipDisplay(shopblip, 4)
         SetBlipScale(shopblip, 1.0)
@@ -31,6 +30,32 @@ Citizen.CreateThread(function()
         EndTextCommandSetBlipName(shopblip)
     end
 
+    for k,v in pairs(cfg.peds) do
+        if cfg.ped == true then
+            local shopPed = GetHashKey("mp_m_shopkeep_01")
+            RequestModel(shopPed)
+            while not HasModelLoaded(shopPed) do
+                Wait(0)
+            end
+
+            local pedx,pedy,pedz,pedh = table.unpack(v) --ped x, ped y, ped z, ped heading
+            local shopEntity = CreatePed(26,shopPed,pedx,pedy,pedz,pedh,false,true)
+            SetModelAsNoLongerNeeded(shopPed)     
+            SetEntityCanBeDamaged(shopEntity, 0)
+            SetPedAsEnemy(shopEntity, 0)   
+            SetBlockingOfNonTemporaryEvents(shopEntity, 1)
+            SetPedResetFlag(shopEntity, 249, 1)
+            SetPedConfigFlag(shopEntity, 185, true)
+            SetPedConfigFlag(shopEntity, 108, true)
+            SetEntityInvincible(shopEntity, true)
+            SetEntityCanBeDamaged(shopEntity, false)
+            SetPedCanEvasiveDive(shopEntity, 0)
+            SetPedCanRagdollFromPlayerImpact(shopEntity, 0)
+            SetPedConfigFlag(shopEntity, 208, true)       
+            FreezeEntityPosition(shopEntity, true)
+        end
+    end
+
     while true do
         Citizen.Wait(0)
 
@@ -38,7 +63,7 @@ Citizen.CreateThread(function()
             local x,y,z = table.unpack(v)
             local location = vector3(x,y,z)
 
-            if isInArea(location, 50.0) then 
+            if isInArea(location, 100.0) then 
                 DrawMarker(20, location+1 - 0.98, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 0, 255, 60, true, false, 2, true)
             end
  
@@ -60,7 +85,7 @@ Citizen.CreateThread(function()
 end)
 
 function isInArea(v, dis) 
-    if #(GetEntityCoords(PlayerPedId(-1)) - v) <= dis then  
+    if #(GetEntityCoords(PlayerPedId()) - v) <= dis then  
         return true
     else 
         return false
