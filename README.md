@@ -2,7 +2,7 @@
 Shop Script for vRP FiveM Framework
 
 **Config**  
-To add another shop to the script it is very simple. Add a new line in the **cfg.shops** table in config.lua and put the x,y,z in curly brackets. (If you have cfg.ped enabled then you need to add a new line in the cfg.peds table with the peds x,y,z and heading coordinated)
+To add another shop to the script it is very simple. Add a new line in the **cfg.shops** table in config.lua and put the x,y,z in curly brackets. (If you have cfg.ped enabled then you need to add a new line in the cfg.peds table with the peds x,y,z and heading coordinates)
 
 To change the currency go to config.lua and change **cfg.currency = "£"** to whatever currency you use on your server! 
 
