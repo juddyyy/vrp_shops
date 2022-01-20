@@ -4,7 +4,7 @@ games { 'gta5' }
 author "jud"
 
 dependencies {
-    'vrp',
+    "vrp",
     "RageUI"
 }
 
