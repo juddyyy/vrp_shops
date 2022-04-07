@@ -1,13 +1,16 @@
 RMenu.Add('vRP_Shops', 'main', RageUI.CreateMenu("Shop", "~b~Shop", 1350, 50))
 
 RageUI.CreateWhile(1.0, RMenu:Get('vRP_Shops', 'main'), nil, function()
+
     RageUI.IsVisible(RMenu:Get('vRP_Shops', 'main'), true, false, true, function()
         for k, v in pairs(cfg.items) do
-            RageUI.Button(v.name, nil, {RightLabel = cfg.currency..v.price}, true, function(Hovered, Active, Selected)
+
+            RageUI.Button(v.name, nil, { RightLabel = cfg.currency..v.price }, true, function(Hovered, Active, Selected)
                 if Selected then
                     TriggerServerEvent("vrpshop:buy", v.itemid, v.price)
                 end
             end)
+
         end
     end, function() 
     end)
